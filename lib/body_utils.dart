@@ -4,6 +4,8 @@ import 'package:http_request_utils/models/body_exception.dart';
 
 export 'package:http_request_utils/models/body_exception.dart' show BodyException;
 export 'package:http_request_utils/models/http_exception.dart' show HttpException;
+export 'package:http_request_utils/models/http_exception.dart' show Code;
+export 'package:http_request_utils/models/http_exception.dart' show Reason;
 
 dynamic jsonField <T>(dynamic json, List<String> field, {bool nullable = true, T? defaultValue}) {
   dynamic retval = json;
