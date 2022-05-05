@@ -1,6 +1,6 @@
 
 
-import 'package:http_utils/body_utils.dart';
+import 'package:http_request_utils/body_utils.dart';
 
 class RequestData {
   String id;

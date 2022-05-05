@@ -1,9 +1,9 @@
-library http_utils;
+library http_request_utils;
 
-import 'package:http_utils/models/body_exception.dart';
+import 'package:http_request_utils/models/body_exception.dart';
 
-export 'package:http_utils/models/body_exception.dart' show BodyException;
-export 'package:http_utils/models/http_exception.dart' show HttpException;
+export 'package:http_request_utils/models/body_exception.dart' show BodyException;
+export 'package:http_request_utils/models/http_exception.dart' show HttpException;
 
 dynamic jsonField <T>(dynamic json, List<String> field, {bool nullable = true, T? defaultValue}) {
   dynamic retval = json;

@@ -1,4 +1,4 @@
-Http Utils is a way to handle json request responses with a bigger control of the keys that this json contains. 
+Http Request Utils is a way to handle json request responses with a bigger control of the keys that this json contains. 
 Multiple times we make our models to parse jsons with only the key of the map, but if one of them fails we will only know what misses or has incorrect types watching the output of the console. Instead, with this package a specific **body exception** will be thrown, containing if it was null or if it was an incorrect value type or if key is not coming.
 
 It also comes with a **http_exception** model, that can handle in an easier way how your requests fails.

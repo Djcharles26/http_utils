@@ -1,4 +1,4 @@
-name: http_utils Release 
+name: http_request_utils Release 
 
 on:
   push:

@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:http_utils/body_utils.dart';
+import 'package:http_request_utils/body_utils.dart';
 
 void main() {
   final json = {

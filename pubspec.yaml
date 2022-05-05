@@ -1,4 +1,4 @@
-name: http_utils
+name: http_request_utils
 description: Http requests utils
 version: 0.1.0
 homepage: https://github.com/Djcharles26/
