@@ -6,6 +6,7 @@ void main() {
     "_id": {
       "\$oid": "123"
     },
+    "organization": null,
     "integer": 15,
     "number": 0.45,
     "name": "Juan",
@@ -19,6 +20,7 @@ void main() {
     expect(jsonField<num> (json, ["number",],  nullable: false), 0.45);
     expect(jsonField<String> (json, ["_id", "\$oid"], nullable: false), "123");
     expect(jsonField<String> (json, ["nullValue",]), null);
+    expect(jsonField<String> (json, ["organization", "\$oid"], defaultValue: "Is null"), "Is null");
     expect (() => jsonField<String> (json, ["jsonBody"],  nullable: false), throwsA(isA<BodyException>()));
   });
 
@@ -30,5 +32,6 @@ void main() {
 
   test ("Check for exceptions with null values", () {
     expect (() => jsonField<String> (json, ["nullValue"], nullable: false), throwsA (isA<BodyException> ()));
+    expect (() => jsonField<String> (json, ["organization", "\$oid"], nullable: false), throwsA (isA<BodyException> ()));
   });
 }
