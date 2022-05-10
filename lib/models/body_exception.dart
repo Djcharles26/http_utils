@@ -34,7 +34,7 @@ class BodyException implements Exception {
   String toString() {
     String base = "${type.name}: $fieldName";
     if (failedType != null) {
-      base += "\nFailed Type: $failedType / Current Type: $currentType";
+      base += "\nFailed Type: $failedType \nCurrent Type: $currentType";
     }
     return base;
     // return super.toString(); // Instance of BodyException

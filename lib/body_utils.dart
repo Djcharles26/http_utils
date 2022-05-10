@@ -12,6 +12,9 @@ dynamic jsonField <T>(dynamic json, List<String> field, {bool nullable = true, T
   try {
     for (String f in field){
       retval = retval [f];
+      if (retval == null && nullable) {
+        break;
+      }
     }
     if (retval == null) {
       if (!nullable) {
@@ -36,11 +39,11 @@ dynamic jsonField <T>(dynamic json, List<String> field, {bool nullable = true, T
   } on NoSuchMethodError catch (_) {
     throw BodyException(
       type: BodyExceptionType.isNull, 
-      fieldName: field.join ("-"), 
+      fieldName: field.join ("_"), 
       failedType: T, 
       currentType: retval.runtimeType
     );  
   } catch (error) {
-    throw BodyException(type: BodyExceptionType.undefined, fieldName: field.join ("-"));
+    throw BodyException(type: BodyExceptionType.undefined, fieldName: field.join ("_"));
   }
 }
