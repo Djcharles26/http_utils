@@ -13,3 +13,8 @@
 - Updated how for loop manages null keys
 - Updated text of body exception errors
 - Added tests to check for empty keys
+
+## 0.2.0
+- Added json list field method for handling lists
+- Added json class field method for handling custom classes
+- Updated tests with new methods
