@@ -12,6 +12,10 @@ With this exception you can centrify all the exceptions that occurs in the reque
 - Determine if this key can be nullable
 - Give a default value in case this key is null
 
+***New***
+    - Now can parse lists, pass a map method to convert it.
+    - Now can parse classes, and even return null if there's an exception
+
 #### Http Exception
 - Receives a message
 - A Code
@@ -30,6 +34,12 @@ With this exception you can centrify all the exceptions that occurs in the reque
             number: jsonField<num> (json, ["number"],  nullable: false),
             integer: jsonField<int> (json, ["integer",],  nullable: false),
             shortMap: jsonField<dynamic> (json, ["short_map",],  nullable: false),
+            object: jsonClassField<Object> (json, ["class"], nullOnException: true),
+            aList: jsonListField<ListObject> (
+                json, ["a_list"], 
+                map: ListObject.fromJson,
+                nullable: false
+            )
             date: DateTime.fromMillisecondsSinceEpoch(
                 jsonField<int> (json, ["date", "\$date"]),
             )

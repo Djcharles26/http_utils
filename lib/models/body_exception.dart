@@ -27,14 +27,18 @@ class BodyException implements Exception {
   BodyExceptionType type;
   dynamic failedType;
   dynamic currentType;
+  int? index;
 
-  BodyException( {required this.type, required this.fieldName, this.failedType, this.currentType});
+  BodyException( {required this.type, required this.fieldName, this.failedType, this.currentType, this.index});
 
   @override
   String toString() {
     String base = "${type.name}: $fieldName";
     if (failedType != null) {
       base += "\nFailed Type: $failedType \nCurrent Type: $currentType";
+    }
+    if (index != null) {
+      base +="\nFailed Index: $index";
     }
     return base;
     // return super.toString(); // Instance of BodyException
