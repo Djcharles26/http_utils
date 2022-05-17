@@ -1,3 +1,2 @@
-- Added json list field method for handling lists
-- Added json class field method for handling custom classes
-- Updated tests with new methods
+- Updated how null on exception class is executed
+- Added tests for null classes and assertion errors
