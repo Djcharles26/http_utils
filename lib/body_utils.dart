@@ -101,8 +101,15 @@ dynamic jsonListField<T> (
 
 dynamic jsonClassField<T> (
   dynamic json, List<String> field, T Function (dynamic) fromJson, 
-  {bool nullable = true, T? defaultValue}
+  {bool nullable = true, bool nullOnException = false, T? defaultValue}
 ) {
+  assert (
+    (
+      nullable && ( nullOnException || !nullOnException )
+    )
+    || (!nullable && !nullOnException)
+  );
+
   T? retval;
 
   dynamic body = jsonField<dynamic> (json, field,  nullable: nullable);
