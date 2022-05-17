@@ -47,6 +47,14 @@ void main() {
       "\$oid": "123"
     },
     "stringList": ["Hello", "World"],
+    "badClass": {
+      "_id": {
+        "\$oid": "456"
+      },
+      "integer": 4,
+      "name": null,
+      "lastname": "Marin"
+    },
     "organization": null,
     "integer": 15,
     "number": 0.45,
@@ -92,11 +100,13 @@ void main() {
 
   test ('Check for class json fields', () {
     expect (jsonClassField<TestClass>(json, [], TestClass.fromJson, nullable: false), isA<TestClass> ());
+    expect (jsonClassField<TestClass>(json, ["badClass"], TestClass.fromJson, nullOnException: true, nullable: true), null);
     expect (jsonClassField<TestClass>(json, ["object"], (item) => TestClass.fromJson (item)), null);
   });
 
   test ('Check for class json fields with incorrect field type', () {
     expect (() => jsonClassField<TestListClass> (json, [], TestListClass.fromJson, nullable: false), throwsA(isA<BodyException> ()));
+    expect (() => jsonClassField<TestClass> (json, [], TestClass.fromJson, nullOnException: true, nullable: false), throwsA (isA<AssertionError> ()));
   });
 
   test ("Check for exceptions with incorrect file types", () {
