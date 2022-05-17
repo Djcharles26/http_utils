@@ -112,25 +112,33 @@ dynamic jsonClassField<T> (
 
   T? retval;
 
-  dynamic body = jsonField<dynamic> (json, field,  nullable: nullable);
+  try {
 
-  if (body != null) {
-    try {
-      retval = fromJson (body);
-    } on BodyException {
+    dynamic body = jsonField<dynamic> (json, field,  nullable: nullable);
+
+    if (body != null) {
+      try {
+        retval = fromJson (body);
+      } on BodyException {
+        rethrow;
+      } on NoSuchMethodError catch (_) {
+        throw BodyException(
+          type: BodyExceptionType.isNull, 
+          fieldName: field.join ("_"), 
+          failedType: T, 
+          currentType: retval.runtimeType
+        );  
+      } catch (error) {
+        throw BodyException(
+          type: BodyExceptionType.undefined, 
+          fieldName: field.join ("_"),
+        );
+      }
+    }
+
+  } on BodyException {
+    if (!nullOnException) {
       rethrow;
-    } on NoSuchMethodError catch (_) {
-      throw BodyException(
-        type: BodyExceptionType.isNull, 
-        fieldName: field.join ("_"), 
-        failedType: T, 
-        currentType: retval.runtimeType
-      );  
-    } catch (error) {
-      throw BodyException(
-        type: BodyExceptionType.undefined, 
-        fieldName: field.join ("_"),
-      );
     }
   }
 
