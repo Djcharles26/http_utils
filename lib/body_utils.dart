@@ -111,14 +111,14 @@ dynamic jsonListField<T> (
 }
 
 dynamic jsonClassField<T> (
-  dynamic json, List<String> field, T Function (dynamic) fromJson, 
-  {bool nullable = true, bool nullOnException = false, T? defaultValue}
+  dynamic json, List<String> field, T? Function (dynamic) fromJson, 
+  {bool nullable = true, bool skipException = false, T? defaultValue}
 ) {
   assert (
     (
-      nullable && ( nullOnException || !nullOnException )
+      nullable && ( skipException || !skipException )
     )
-    || (!nullable && !nullOnException)
+    || (!nullable && !skipException)
   );
 
   T? retval;
@@ -130,6 +130,10 @@ dynamic jsonClassField<T> (
     if (body != null) {
       try {
         retval = fromJson (body);
+
+        if (retval == null && !nullable) {
+          throw NoSuchMethodError;
+        }
       } on BodyException {
         rethrow;
       } on NoSuchMethodError catch (_) {
@@ -148,7 +152,7 @@ dynamic jsonClassField<T> (
     }
 
   } on BodyException {
-    if (!nullOnException) {
+    if (!skipException) {
       rethrow;
     }
   }
