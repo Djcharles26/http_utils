@@ -50,7 +50,12 @@ dynamic jsonField <T>(dynamic json, List<String> field, {bool nullable = true, T
 
 dynamic jsonListField<T> (
   dynamic json, List<String> field, 
-  {T Function (dynamic)? map, bool nullable = true, List<T>? defaultValue}
+  {
+    T Function (dynamic)? map, 
+    bool nullable = true, 
+    bool skipExceptions = false,
+    List<T>? defaultValue,
+  }
 ) {
   List<T>? retval;
   Iterable? list = jsonField<dynamic> (json, field,  nullable: nullable);
@@ -58,39 +63,45 @@ dynamic jsonListField<T> (
     retval = [];
     int i = 0;
     for (dynamic item in list) {
-      if (map != null) {
-        try {
-          retval.add (
-            map (item)
-          );
-          i++;
-        } on BodyException catch (error) {
-          throw BodyException(
-            type: error.type, 
-            fieldName: field.join ("-") + "[" + error.fieldName + "]",
-            currentType: error.currentType,
-            failedType: error.failedType,
-            index: i
-          );
-        } catch (error) {
-          throw BodyException(
-            type: BodyExceptionType.undefined, 
-            fieldName: field.join ("-"),
-            index: i
-          );
+      try {
+        if (map != null) {
+          try {
+            retval.add (
+              map (item)
+            );
+            i++;
+          } on BodyException catch (error) {
+            throw BodyException(
+              type: error.type, 
+              fieldName: field.join ("-") + "[" + error.fieldName + "]",
+              currentType: error.currentType,
+              failedType: error.failedType,
+              index: i
+            );
+          } catch (error) {
+            throw BodyException(
+              type: BodyExceptionType.undefined, 
+              fieldName: field.join ("-"),
+              index: i
+            );
+          }
+        } else {
+          try {
+            assert (item is T);
+            retval.add (item);
+          } on AssertionError {
+            throw BodyException(
+              type: BodyExceptionType.isNotType, 
+              fieldName: field.join ("-"), 
+              failedType: T, 
+              currentType: retval.runtimeType,
+              index: i
+            );  
+          }
         }
-      } else {
-        try {
-          assert (item is T);
-          retval.add (item);
-        } on AssertionError {
-          throw BodyException(
-            type: BodyExceptionType.isNotType, 
-            fieldName: field.join ("-"), 
-            failedType: T, 
-            currentType: retval.runtimeType,
-            index: i
-          );  
+      } on BodyException {
+        if (!skipExceptions) {
+          rethrow;
         }
       }
     }

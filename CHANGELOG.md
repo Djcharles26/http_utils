@@ -26,3 +26,6 @@
 
 ## 0.2.2
 - Fixed missing default value return in json class field
+
+## 0.2.3
+- Added skip exceptions value in json list field
