@@ -1,1 +1,1 @@
-- Fixed missing default value return in json class field
+- Added skip exceptions value in json list field
