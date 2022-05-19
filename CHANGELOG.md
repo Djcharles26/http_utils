@@ -22,3 +22,7 @@
 ## 0.2.1
 - Updated how null on exception class is executed
 - Added tests for null classes and assertion errors
+
+
+## 0.2.2
+- Fixed missing default value return in json class field

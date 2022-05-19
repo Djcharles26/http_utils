@@ -2,10 +2,10 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:http_request_utils/body_utils.dart';
 
 class TestClass {
-  String id;
-  int integer;
-  String name;
-  String lastname;
+  String id = "";
+  int integer = 0;
+  String name = "";
+  String lastname = "";
 
   TestClass({
     required this.id,
@@ -13,6 +13,8 @@ class TestClass {
     required this.name,
     required this.lastname
   });
+
+  TestClass.empty ();
 
   factory TestClass.fromJson (dynamic json) {
     return TestClass (
@@ -102,6 +104,12 @@ void main() {
     expect (jsonClassField<TestClass>(json, [], TestClass.fromJson, nullable: false), isA<TestClass> ());
     expect (jsonClassField<TestClass>(json, ["badClass"], TestClass.fromJson, nullOnException: true, nullable: true), null);
     expect (jsonClassField<TestClass>(json, ["object"], (item) => TestClass.fromJson (item)), null);
+    expect (
+      jsonClassField<TestClass>(
+        json, ["object"], TestClass.fromJson, 
+        nullable: true, nullOnException: true, defaultValue: TestClass.empty ()
+      ), isA<TestClass>()
+    );
   });
 
   test ('Check for class json fields with incorrect field type', () {

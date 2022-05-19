@@ -1,2 +1,1 @@
-- Updated how null on exception class is executed
-- Added tests for null classes and assertion errors
+- Fixed missing default value return in json class field
