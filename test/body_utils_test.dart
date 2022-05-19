@@ -76,7 +76,25 @@ void main() {
       {
         "index": 2,
         "text": "Hallo"
-      }
+      },
+    ],
+    "classListWithOneError": [
+      {
+        "index": 0,
+        "text": "Hola"
+      },
+      {
+        "index": 1,
+        "text": "Hello"
+      },
+      {
+        "index": 2,
+        "text": "Hallo"
+      },
+      {
+        "index": "Dog",
+        "text": "Hallo"
+      },
     ]
   };
 
@@ -94,10 +112,12 @@ void main() {
     expect (jsonListField<String>(json, ["stringList"], nullable: false), <String>["Hello", "World"]);
     expect (jsonListField<String>(json, ["string_list"]), null);
     expect (jsonListField<TestListClass>(json, ["classList"], map: TestListClass.fromJson), isA<List<TestListClass>> ());
+    expect (jsonListField<TestListClass>(json, ["classListWithOneError"], map: TestListClass.fromJson, skipExceptions: true).length, 3);
   });
 
   test('Check for list json fields with incorrect field types', () {
     expect (() => jsonListField<int> (json, ["stringList"], nullable: false), throwsA (isA<BodyException> ()));
+    expect (jsonListField<int> (json, ["stringList"], skipExceptions: true), []);
   });
 
   test ('Check for class json fields', () {
