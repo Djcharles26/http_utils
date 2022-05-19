@@ -1,1 +1,2 @@
-- Added skip exceptions value in json list field
+- Small changes applied on json class field to handle correctly null item
+- Refactor nullOnException for skipException

@@ -122,19 +122,19 @@ void main() {
 
   test ('Check for class json fields', () {
     expect (jsonClassField<TestClass>(json, [], TestClass.fromJson, nullable: false), isA<TestClass> ());
-    expect (jsonClassField<TestClass>(json, ["badClass"], TestClass.fromJson, nullOnException: true, nullable: true), null);
+    expect (jsonClassField<TestClass>(json, ["badClass"], TestClass.fromJson, skipException: true, nullable: true), null);
     expect (jsonClassField<TestClass>(json, ["object"], (item) => TestClass.fromJson (item)), null);
     expect (
       jsonClassField<TestClass>(
         json, ["object"], TestClass.fromJson, 
-        nullable: true, nullOnException: true, defaultValue: TestClass.empty ()
+        nullable: true, skipException: true, defaultValue: TestClass.empty ()
       ), isA<TestClass>()
     );
   });
 
   test ('Check for class json fields with incorrect field type', () {
     expect (() => jsonClassField<TestListClass> (json, [], TestListClass.fromJson, nullable: false), throwsA(isA<BodyException> ()));
-    expect (() => jsonClassField<TestClass> (json, [], TestClass.fromJson, nullOnException: true, nullable: false), throwsA (isA<AssertionError> ()));
+    expect (() => jsonClassField<TestClass> (json, [], TestClass.fromJson, skipException: true, nullable: false), throwsA (isA<AssertionError> ()));
   });
 
   test ("Check for exceptions with incorrect file types", () {
