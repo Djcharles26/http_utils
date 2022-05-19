@@ -142,5 +142,5 @@ dynamic jsonClassField<T> (
     }
   }
 
-  return retval;
+  return retval ?? defaultValue;
 }
