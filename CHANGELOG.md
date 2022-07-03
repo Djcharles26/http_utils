@@ -33,3 +33,6 @@
 ## 0.2.4
 - Small changes applied on json class field to handle correctly null item
 - Refactor nullOnException for skipException
+
+## 0.2.5
+- Added route field to http exception model
