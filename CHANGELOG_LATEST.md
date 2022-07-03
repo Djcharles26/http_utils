@@ -1,2 +1,1 @@
-- Small changes applied on json class field to handle correctly null item
-- Refactor nullOnException for skipException
+- Added route field to http exception model

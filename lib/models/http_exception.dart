@@ -1,21 +1,25 @@
 class HttpException implements Exception {
   String message;
+  String? route;
   Code code;
   Reason? reason;
   int status;
 
-  HttpException(this.message, {this.code= Code.request, this.reason, this.status = -1});
+  HttpException(this.message, {this.route, this.code= Code.request, this.reason, this.status = -1});
 
 
 
   @override
   String toString() {
-    return 
-      message + 
+    String retval = "";
+    if (route != null) {
+      retval = "Route: $route";
+    }
+    retval += message + 
       "\n${reasonToString(reason??Reason.confirm)}";
+    return retval;
+      
   }
-
-  
 
   String reasonToString(Reason reason){
     switch(reason){
