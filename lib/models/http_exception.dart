@@ -1,11 +1,12 @@
 class HttpException implements Exception {
   String message;
+  String? submessage;
   String? route;
   Code code;
   Reason? reason;
   int status;
 
-  HttpException(this.message, {this.route, this.code= Code.request, this.reason, this.status = -1});
+  HttpException(this.message, {this.submessage, this.route, this.code= Code.request, this.reason, this.status = -1});
 
 
 
@@ -13,9 +14,9 @@ class HttpException implements Exception {
   String toString() {
     String retval = "";
     if (route != null) {
-      retval = "Route: $route";
+      retval = "Route: $route\n";
     }
-    retval += message + 
+    retval += message + (submessage ?? "") +
       "\n${reasonToString(reason??Reason.confirm)}";
     return retval;
       

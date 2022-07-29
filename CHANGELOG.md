@@ -36,3 +36,6 @@
 
 ## 0.2.5
 - Added route field to http exception model
+
+## 0.2.6
+- Added submessage field to http exception model
