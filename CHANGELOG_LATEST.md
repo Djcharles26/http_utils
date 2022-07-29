@@ -1,1 +1,1 @@
-- Added route field to http exception model
+- Added submessage field to http exception model
