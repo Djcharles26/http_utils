@@ -79,10 +79,7 @@ dynamic jsonListField<T> (
               map (item)
             );
             i++;
-          } on BodyException catch (error, bt) {
-            if (printUnknownException) {
-              Completer ().completeError(error, bt);
-            }
+          } on BodyException catch (error) {
             throw BodyException(
               type: error.type, 
               fieldName: field.join ("-") + "[" + error.fieldName + "]",
@@ -90,7 +87,10 @@ dynamic jsonListField<T> (
               failedType: error.failedType,
               index: i
             );
-          } catch (error) {
+          } catch (error, bt) {
+            if (printUnknownException) {
+              Completer ().completeError(error, bt);
+            }
             throw BodyException(
               type: BodyExceptionType.undefined, 
               fieldName: field.join ("-"),
