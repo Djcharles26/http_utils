@@ -1,1 +1,1 @@
-- Added print unknown exception flag in all body utils
+- Updated where unknown exception should print in json list field
