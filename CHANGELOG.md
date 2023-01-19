@@ -39,3 +39,6 @@
 
 ## 0.2.6
 - Added submessage field to http exception model
+
+## 0.2.7
+- Added print unknown exception flag in all body utils

@@ -1,5 +1,7 @@
 library http_request_utils;
 
+import 'dart:async';
+
 import 'package:http_request_utils/models/body_exception.dart';
 
 export 'package:http_request_utils/models/body_exception.dart' show BodyException;
@@ -7,7 +9,7 @@ export 'package:http_request_utils/models/http_exception.dart' show HttpExceptio
 export 'package:http_request_utils/models/http_exception.dart' show Code;
 export 'package:http_request_utils/models/http_exception.dart' show Reason;
 
-dynamic jsonField <T>(dynamic json, List<String> field, {bool nullable = true, T? defaultValue}) {
+dynamic jsonField <T>(dynamic json, List<String> field, {bool nullable = true, T? defaultValue, bool printUnknownException = false}) {
   dynamic retval = json;
   try {
     for (String f in field){
@@ -43,8 +45,14 @@ dynamic jsonField <T>(dynamic json, List<String> field, {bool nullable = true, T
       failedType: T, 
       currentType: retval.runtimeType
     );  
-  } catch (error) {
-    throw BodyException(type: BodyExceptionType.undefined, fieldName: field.join ("_"));
+  } catch (error, bt) {
+    if (printUnknownException) {
+      Completer ().completeError(error, bt);
+    }
+    throw BodyException(
+      type: BodyExceptionType.undefined, 
+      fieldName: field.join ("_")
+    );
   }
 }
 
@@ -55,6 +63,7 @@ dynamic jsonListField<T> (
     bool nullable = true, 
     bool skipExceptions = false,
     List<T>? defaultValue,
+    bool printUnknownException = false
   }
 ) {
   List<T>? retval;
@@ -70,7 +79,10 @@ dynamic jsonListField<T> (
               map (item)
             );
             i++;
-          } on BodyException catch (error) {
+          } on BodyException catch (error, bt) {
+            if (printUnknownException) {
+              Completer ().completeError(error, bt);
+            }
             throw BodyException(
               type: error.type, 
               fieldName: field.join ("-") + "[" + error.fieldName + "]",
@@ -112,7 +124,7 @@ dynamic jsonListField<T> (
 
 dynamic jsonClassField<T> (
   dynamic json, List<String> field, T? Function (dynamic) fromJson, 
-  {bool nullable = true, bool skipException = false, T? defaultValue}
+  {bool nullable = true, bool skipException = false, T? defaultValue, bool printUnknownException = false}
 ) {
   assert (
     (
@@ -143,7 +155,10 @@ dynamic jsonClassField<T> (
           failedType: T, 
           currentType: retval.runtimeType
         );  
-      } catch (error) {
+      } catch (error, bt) {
+        if (printUnknownException) {
+          Completer().completeError(error, bt);
+        }
         throw BodyException(
           type: BodyExceptionType.undefined, 
           fieldName: field.join ("_"),
