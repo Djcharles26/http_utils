@@ -45,3 +45,6 @@
 
 ## 0.2.8
 - Updated where unknown exception should print in json list field
+
+## 0.2.9
+- Updated skip exceptions validation in json list field

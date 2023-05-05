@@ -1,1 +1,1 @@
-- Updated where unknown exception should print in json list field
+- Updated skip exceptions validation in json list field
