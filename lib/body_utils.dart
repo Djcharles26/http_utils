@@ -67,55 +67,72 @@ dynamic jsonListField<T> (
   }
 ) {
   List<T>? retval;
-  Iterable? list = jsonField<dynamic> (json, field,  nullable: nullable);
-  if (list != null) {
-    retval = [];
-    int i = 0;
-    for (dynamic item in list) {
-      try {
-        if (map != null) {
-          try {
-            retval.add (
-              map (item)
-            );
-            i++;
-          } on BodyException catch (error) {
-            throw BodyException(
-              type: error.type, 
-              fieldName: field.join ("-") + "[" + error.fieldName + "]",
-              currentType: error.currentType,
-              failedType: error.failedType,
-              index: i
-            );
-          } catch (error, bt) {
-            if (printUnknownException) {
-              Completer ().completeError(error, bt);
+  try {
+    Iterable? list = jsonField<dynamic> (json, field,  nullable: nullable);
+    if (list != null) {
+      retval = [];
+      int i = 0;
+      for (dynamic item in list) {
+        try {
+          if (map != null) {
+            try {
+              retval.add (
+                map (item)
+              );
+              i++;
+            } on BodyException catch (error) {
+              throw BodyException(
+                type: error.type, 
+                fieldName: field.join ("-") + "[" + error.fieldName + "]",
+                currentType: error.currentType,
+                failedType: error.failedType,
+                index: i
+              );
+            } catch (error, bt) {
+              if (printUnknownException) {
+                Completer ().completeError(error, bt);
+              }
+              throw BodyException(
+                type: BodyExceptionType.undefined, 
+                fieldName: field.join ("-"),
+                index: i
+              );
             }
-            throw BodyException(
-              type: BodyExceptionType.undefined, 
-              fieldName: field.join ("-"),
-              index: i
-            );
+          } else {
+            try {
+              assert (item is T);
+              retval.add (item);
+            } on AssertionError {
+              throw BodyException(
+                type: BodyExceptionType.isNotType, 
+                fieldName: field.join ("-"), 
+                failedType: T, 
+                currentType: retval.runtimeType,
+                index: i
+              );  
+            }
           }
-        } else {
-          try {
-            assert (item is T);
-            retval.add (item);
-          } on AssertionError {
-            throw BodyException(
-              type: BodyExceptionType.isNotType, 
-              fieldName: field.join ("-"), 
-              failedType: T, 
-              currentType: retval.runtimeType,
-              index: i
-            );  
+        } on BodyException {
+          if (!skipExceptions) {
+            rethrow;
           }
-        }
-      } on BodyException {
-        if (!skipExceptions) {
-          rethrow;
         }
       }
+    }
+  } on BodyException {
+    if (!skipExceptions) {
+      rethrow;
+    }
+  } catch (error, bt) {
+    if (printUnknownException) {
+      Completer ().completeError(error, bt);
+    }
+
+    if (!skipExceptions) {
+      throw BodyException(
+        type: BodyExceptionType.undefined, 
+        fieldName: field.join ("-"),
+      );
     }
   }
 
