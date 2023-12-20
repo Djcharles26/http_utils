@@ -48,3 +48,7 @@
 
 ## 0.2.9
 - Updated skip exceptions validation in json list field
+
+## 0.3.0
+- Updated http exception with data field
+- Added more reason types

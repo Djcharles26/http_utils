@@ -5,8 +5,19 @@ class HttpException implements Exception {
   Code code;
   Reason? reason;
   int status;
+  Map<String, dynamic> data = {};
 
-  HttpException(this.message, {this.submessage, this.route, this.code= Code.request, this.reason, this.status = -1});
+
+  HttpException(
+    this.message, {
+      this.submessage, 
+      this.route, 
+      this.code= Code.request, 
+      this.reason, 
+      this.status = -1,
+      this.data = const {}
+    }
+  );
 
 
 
@@ -16,8 +27,7 @@ class HttpException implements Exception {
     if (route != null) {
       retval = "Route: $route\n";
     }
-    retval += message + (submessage ?? "") +
-      "\n${reasonToString(reason??Reason.confirm)}";
+    retval += "$message${submessage ?? ""}\n${reasonToString(reason??Reason.confirm)}";
     return retval;
       
   }
@@ -66,7 +76,9 @@ enum Reason {
   confirm,
   notFound,
   missingValues,
-  cancelled
+  cancelled,
+  device,
+  phone
 }
 
 enum Code {
