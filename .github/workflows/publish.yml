@@ -14,7 +14,7 @@ jobs:
       - name: Install Flutter
         uses: subosito/flutter-action@v1
         with:
-          flutter-version: '3.3.5'
+          flutter-version: '3.16.0'
       - name: Install dependencies
         run: flutter pub get
       - name: Analyze
@@ -31,9 +31,9 @@ jobs:
         run: |
           sh ./pub_login.sh
       - name: Check Publish Warnings
-        run: pub publish --dry-run
+        run: dart pub publish --dry-run
       - name: Publish Package
-        run: pub publish -f
+        run: dart pub publish -f
   
   release:
     name: Create Release
