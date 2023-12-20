@@ -5,8 +5,8 @@ import 'dart:async';
 import 'package:http_request_utils/models/body_exception.dart';
 
 export 'package:http_request_utils/models/body_exception.dart' show BodyException;
-export 'package:http_request_utils/models/http_exception.dart' show HttpException;
 export 'package:http_request_utils/models/http_exception.dart' show Code;
+export 'package:http_request_utils/models/http_exception.dart' show HttpException;
 export 'package:http_request_utils/models/http_exception.dart' show Reason;
 
 dynamic jsonField <T>(dynamic json, List<String> field, {bool nullable = true, T? defaultValue, bool printUnknownException = false}) {
@@ -83,7 +83,7 @@ dynamic jsonListField<T> (
             } on BodyException catch (error) {
               throw BodyException(
                 type: error.type, 
-                fieldName: field.join ("-") + "[" + error.fieldName + "]",
+                fieldName: "${field.join ("-")}[${error.fieldName}]",
                 currentType: error.currentType,
                 failedType: error.failedType,
                 index: i
