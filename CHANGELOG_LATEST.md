@@ -1,1 +1,2 @@
-- Updated skip exceptions validation in json list field
+- Updated http exception with data field
+- Added more reason types
