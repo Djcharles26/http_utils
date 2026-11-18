@@ -10,11 +10,12 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v1
+      - uses: actions/checkout@v4
       - name: Install Flutter
-        uses: subosito/flutter-action@v1
+        uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.16.0'
+          channel: stable
+          flutter-version: '3.47.5'
       - name: Install dependencies
         run: flutter pub get
       - name: Analyze
@@ -40,20 +41,21 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
       - name: Read version file
         id: get_version
-        run: echo "::set-output name=version::$(cat version.txt)"
+        run: echo "version=$(cat version.txt)" >> "$GITHUB_OUTPUT"
 
       - name: Read changelog
         id: get_changes
         run: |
-          changes=$(cat CHANGELOG_LATEST.md)
-          changes="${changes//'%'/'%25'}"
-          changes="${changes//$'\n'/'%0A'}"
-          changes="${changes//$'\r'/'%0D'}"
-          echo "::set-output name=changes::$changes"
+          {
+            echo "changes<<CHANGELOG_EOF"
+            cat CHANGELOG_LATEST.md
+            echo ""
+            echo "CHANGELOG_EOF"
+          } >> "$GITHUB_OUTPUT"
       - name: Create Release
         id: create_release
         uses: actions/create-release@v1
