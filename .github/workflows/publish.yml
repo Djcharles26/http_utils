@@ -1,16 +1,31 @@
-name: http_request_utils Release 
+name: http_request_utils Release
 
+# Pushing a version tag (e.g. 0.4.0) publishes to pub.dev with automated
+# publishing (GitHub OIDC, no stored credentials) and creates the GitHub
+# release with the workflow's own token. pub.dev only accepts tag pushes
+# whose tag matches the `{{version}}` pattern set in its admin page.
 on:
   push:
-    branches:
-      - master
+    tags:
+      - '[0-9]+.[0-9]+.[0-9]+*'
 
 jobs:
   publish:
     runs-on: ubuntu-latest
+    permissions:
+      id-token: write
 
     steps:
       - uses: actions/checkout@v4
+      - name: Check the tag matches the package version
+        run: |
+          version=$(grep '^version:' pubspec.yaml | awk '{print $2}')
+          if [ "$version" != "$GITHUB_REF_NAME" ]; then
+            echo "Tag $GITHUB_REF_NAME does not match pubspec version $version"
+            exit 1
+          fi
+      - name: Set up the pub.dev token (OIDC)
+        uses: dart-lang/setup-dart@v1
       - name: Install Flutter
         uses: subosito/flutter-action@v2
         with:
@@ -22,48 +37,25 @@ jobs:
         run: flutter analyze
       - name: Run tests
         run: flutter test
-      - name: Setup Pub Credentials
-        shell: bash
-        env:
-          PUB_DEV_PUBLISH_ACCESS_TOKEN: ${{ secrets.PUB_DEV_PUBLISH_ACCESS_TOKEN }}
-          PUB_DEV_PUBLISH_REFRESH_TOKEN: ${{ secrets.PUB_DEV_PUBLISH_REFRESH_TOKEN }}
-          PUB_DEV_PUBLISH_TOKEN_ENDPOINT: ${{ secrets.PUB_DEV_PUBLISH_TOKEN_ENDPOINT }}
-          PUB_DEV_PUBLISH_EXPIRATION: ${{ secrets.PUB_DEV_PUBLISH_EXPIRATION }}
-        run: |
-          sh ./pub_login.sh
-      - name: Check Publish Warnings
+      - name: Check publish warnings
         run: dart pub publish --dry-run
-      - name: Publish Package
-        run: dart pub publish -f
-  
+      - name: Publish package
+        run: dart pub publish --force
+
   release:
     name: Create Release
+    needs: publish
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-
-      - name: Read version file
-        id: get_version
-        run: echo "version=$(cat version.txt)" >> "$GITHUB_OUTPUT"
-
-      - name: Read changelog
-        id: get_changes
-        run: |
-          {
-            echo "changes<<CHANGELOG_EOF"
-            cat CHANGELOG_LATEST.md
-            echo ""
-            echo "CHANGELOG_EOF"
-          } >> "$GITHUB_OUTPUT"
-      - name: Create Release
-        id: create_release
-        uses: actions/create-release@v1
+      - name: Create release
         env:
-          GITHUB_TOKEN: ${{ secrets.PAT }}
-        with:
-          tag_name: ${{ steps.get_version.outputs.version }}
-          release_name: Release ${{ steps.get_version.outputs.version }}
-          body: ${{ steps.get_changes.outputs.changes }}
-          draft: false
-          prerelease: false
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release create "$GITHUB_REF_NAME" \
+            --title "Release $GITHUB_REF_NAME" \
+            --notes-file CHANGELOG_LATEST.md
