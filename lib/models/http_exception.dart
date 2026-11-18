@@ -7,7 +7,6 @@ class HttpException implements Exception {
   int status;
   Map<String, dynamic> data = {};
 
-
   HttpException(
     this.message, {
       this.submessage, 
@@ -19,15 +18,20 @@ class HttpException implements Exception {
     }
   );
 
-
-
   @override
   String toString() {
     String retval = "";
     if (route != null) {
       retval = "Route: $route\n";
     }
-    retval += "$message${submessage ?? ""}\n${reasonToString(reason??Reason.confirm)}";
+    retval += 
+      "$message\n"
+      "Code: $code\n"
+      "Status: $status";
+
+    if (submessage?.isNotEmpty ?? false) {
+      retval +="\n$submessage";
+    }
     return retval;
       
   }
@@ -61,8 +65,6 @@ class HttpException implements Exception {
         return "Code System";
       case Code.db:
         return "Code DB";
-      default:
-        return "Unkown Code";
     }
   }
 }

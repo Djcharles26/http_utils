@@ -1,4 +1,4 @@
-library http_request_utils;
+library;
 
 import 'dart:async';
 
@@ -9,7 +9,10 @@ export 'package:http_request_utils/models/http_exception.dart' show Code;
 export 'package:http_request_utils/models/http_exception.dart' show HttpException;
 export 'package:http_request_utils/models/http_exception.dart' show Reason;
 
-dynamic jsonField <T>(dynamic json, List<String> field, {bool nullable = true, T? defaultValue, bool printUnknownException = false}) {
+dynamic jsonField <T>(
+  dynamic json, List<String> field, {
+    bool nullable = true, T? defaultValue, bool printUnknownException = false
+}) {
   dynamic retval = json;
   try {
     for (String f in field){
@@ -141,8 +144,9 @@ dynamic jsonListField<T> (
 
 dynamic jsonClassField<T> (
   dynamic json, List<String> field, T? Function (dynamic) fromJson, 
-  {bool nullable = true, bool skipException = false, T? defaultValue, bool printUnknownException = false}
-) {
+  {bool nullable = true, bool skipException = false, 
+  T? defaultValue, bool printUnknownException = false
+}) {
   assert (
     (
       nullable && ( skipException || !skipException )
@@ -161,24 +165,22 @@ dynamic jsonClassField<T> (
         retval = fromJson (body);
 
         if (retval == null && !nullable) {
-          throw NoSuchMethodError;
+          throw BodyException(
+            type: BodyExceptionType.isNull,
+            fieldName: field.join ("-"),
+            failedType: T,
+            currentType: retval.runtimeType
+          );
         }
       } on BodyException {
         rethrow;
-      } on NoSuchMethodError catch (_) {
-        throw BodyException(
-          type: BodyExceptionType.isNull, 
-          fieldName: field.join ("_"), 
-          failedType: T, 
-          currentType: retval.runtimeType
-        );  
       } catch (error, bt) {
         if (printUnknownException) {
           Completer().completeError(error, bt);
         }
         throw BodyException(
-          type: BodyExceptionType.undefined, 
-          fieldName: field.join ("_"),
+          type: BodyExceptionType.undefined,
+          fieldName: field.join ("-"),
         );
       }
     }

@@ -1,2 +1,4 @@
-- Updated http exception with data field
-- Added more reason types
+- Updated flutter_lints to 6.0 and the release workflow to Flutter 3.47.5
+- jsonClassField throws a BodyException (field joined with "-") when a non-nullable class is null
+- HttpException.toString shows message, code and status on separate lines
+- Removed an unreachable default in codeToString
